@@ -1,6 +1,8 @@
-﻿namespace CSEhelp.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace CSEhelp.Entities
 {
-    public class AppUser
+    public class AppUser: IdentityUser
     {
     }
 }
