@@ -1,49 +1,132 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CseHelp.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CseHelp.Web.styles.css" asp-append-version="true" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bolgging website</title>
+	<link rel="stylesheet" href="~/css/all.css">
+	<link rel="stylesheet" href="~/css/style.css">
+	<link rel="stylesheet" href="~/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+	<link rel="stylesheet" href="~/css/aos.css">
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CseHelp.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+	<body>
+		<!-- -------------NAvigation bar----------------->
+		<nav class="nav">
+			<div class="nav-menu flex-row">
+				<div class="nav-brand">
+					<a href="#" class="text-gray">Sanzid</a>
+				</div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - CseHelp.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+				<div class="toggle-collapse">
+					<div class="toggle-icons">
+						<i class="fas fa-bars"></i>
+					</div>
+				</div>
+
+				<div>
+					<ul class="nav-items">
+						<li class="nav-link">
+							<a href="#">Home</a>
+						</li>
+						<li class="nav-link">
+							<a href="#">Catagory</a>
+						</li>
+						<li class="nav-link">
+							<a href="#">Archive</a>
+						</li>
+						<li class="nav-link">
+							<a href="#">Pages</a>
+						</li>
+						<li class="nav-link">
+							<a href="#">Contact us</a>
+						</li>
+					</ul>
+
+				</div>
+				<div class="social text-gray">
+					<a href="#"><i class="fab fa-facebook-f"></i></a>
+					<a href="#"><i class="fab fa-instagram"></i></a>
+					<a href="#"><i class="fab fa-twitter"></i></a>
+					<a href="#"><i class="fab fa-youtube"></i></a>
+				</div>
+			</div>
+		</nav>
+		<!-- --------x--------NAvigation bar------------------x--------->
+		<!-- ---------------------------------- Main Body part ------------------------ -->
+		<main>
+			@RenderBody()
+		</main>
+		<!--x---------------------------------- Main Body part ------------------------x-->
+		<!---------------------------------Footer starts--------------------------->
+		<footer class="footer">
+			<div class="container">
+				<div class="about-me">
+					<h2>About Me</h2>
+					<p>
+						I am a student of Computer Science and Engineering at
+						Pabna University of Scieence and Technology.I love Computer
+						and write about computer.
+					</p>
+				</div>
+
+				<div class="newsletter">
+					<h2>Newsletter</h2>
+					<p>Stay Update with our latest</p>
+					<div class="form-element">
+
+						<input type="text" placeholder="Email"><span><i class="fas fa-chevron-right"></i></span>
+					</div>
+				</div>
+
+				<div class="facebook">
+					<h2>Social</h2>
+					<div class="flex-row">
+						<img src="./asset/Facebook/20200131_162101.jpg" alt="imgage1">
+						<img src="./asset/Facebook/fantasy-4890374_1920.jpg" alt="imgage2">
+						<img src="./asset/Facebook/glasses-1246611_1920.jpg" alt="imgage3">
+					</div>
+					<div class="flex-row">
+						<img src="./asset/Facebook/work-731198_1920.jpg" alt="imgage4">
+						<img src="./asset/Facebook/john-silliman-ZK1HZiMZ2EM-unsplash (1).jpg" alt="imgage5">
+						<img src="./asset/Facebook/20200131_162101.jpg" alt="imgage6">
+					</div>
+				</div>
+
+				<div class="follow">
+					<h2>Follow Me</h2>
+					<p>Let me be Social</p>
+					<div>
+						<i class="fab fa-facebook-f"></i>
+						<i class="fab fa-twitter"></i>
+						<i class="fab fa-instagram"></i>
+						<i class="fab fa-youtube"></i>
+					</div>
+				</div>
+			</div>
+
+			<div class="rights flex-row">
+				<h4 class="text-gray">
+					Copyright &copy;2020 All rights reserved | made by
+					<a href="https://www.facebook.com/000111T" target="_blank">Sanzid <i class="fab fa-facebook-f"></i></a>
+				</h4>
+			</div>
+
+			<div class="move-up">
+				<span>
+					<i class="fas fa-arrow-circle-up fa-2x"></i>
+				</span>
+			</div>
+		</footer>
+		<!-- -----------------x--------------Footer starts-----------------x----------- -->
+		<!-- -------------- Javascript  --------------->
+		<script src="~/js/Jquery.js"></script>
+		<script src="~/js/main.js"></script>
+		<!--Owl carosel--------->
+		<script src="~/js/owl.carousel.min.js"></script>
+		<!-------------------------AOS script-------------------------->
+		<script src="~/js/aos.js"></script>
+		
+		@await RenderSectionAsync("Scripts", required: false)
+	</body>
 </html>
