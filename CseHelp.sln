@@ -5,9 +5,11 @@ VisualStudioVersion = 17.11.34909.67
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CseHelp.Web", "CseHelp.Web\CseHelp.Web.csproj", "{2907BAD2-6BC3-4BFD-B627-5121A2B217F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CseHelp.Models", "CseHelp.Models\CseHelp.Models.csproj", "{58C35764-822F-4A75-89F3-0054A08878DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CseHelp.Models", "CseHelp.Models\CseHelp.Models.csproj", "{58C35764-822F-4A75-89F3-0054A08878DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CseHelp.DataAccess", "CseHelp.DataAccess\CseHelp.DataAccess.csproj", "{EFD26788-C341-4DF6-9C30-8FEA8F904C0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CseHelp.DataAccess", "CseHelp.DataAccess\CseHelp.DataAccess.csproj", "{EFD26788-C341-4DF6-9C30-8FEA8F904C0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CseHelp.Admin", "CseHelp.Admin\CseHelp.Admin.csproj", "{0253FD0D-FDA1-4197-AED9-EF7287C2F67F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{EFD26788-C341-4DF6-9C30-8FEA8F904C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFD26788-C341-4DF6-9C30-8FEA8F904C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFD26788-C341-4DF6-9C30-8FEA8F904C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0253FD0D-FDA1-4197-AED9-EF7287C2F67F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0253FD0D-FDA1-4197-AED9-EF7287C2F67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0253FD0D-FDA1-4197-AED9-EF7287C2F67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0253FD0D-FDA1-4197-AED9-EF7287C2F67F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
