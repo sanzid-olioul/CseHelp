@@ -5,7 +5,7 @@ namespace CseHelp.Web.ServiceRegistry
 {
     public static class CustomServices
     {
-        public static IServiceCollection AddCustomServices(this IServiceCollection services,IConfigurationManager configuration)
+        public static IServiceCollection AddCustomServices(this IServiceCollection services,IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {

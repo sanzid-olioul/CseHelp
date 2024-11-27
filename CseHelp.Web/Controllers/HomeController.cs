@@ -1,4 +1,5 @@
 using CseHelp.Web.Models;
+using CseHelp.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,7 +16,8 @@ namespace CseHelp.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            HomeViewModel model = new HomeViewModel();
+            return View(model);
         }
 
         public IActionResult Privacy()
