@@ -1,10 +1,10 @@
-using CseHelp.Web.ServiceRegistry;
+using CseHelp.Services;
 using CseHelp.Web.Utilities;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddCustomServices(builder.Configuration);
+builder.Services.RegisterServices(builder.Configuration);
 builder.Configuration.GetSection("Settings").Bind(SocialLinks.Values);
 
 var app = builder.Build();

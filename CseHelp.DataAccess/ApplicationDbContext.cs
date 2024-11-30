@@ -1,9 +1,9 @@
 ﻿using CseHelp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CseHelp.DataAccess.Data
+namespace CseHelp.DataAccess
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContext) : base(dbContext) { }
 

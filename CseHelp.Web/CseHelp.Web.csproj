@@ -7,22 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CseHelp.Common\CseHelp.Common.csproj" />
-    <ProjectReference Include="..\CseHelp.DataAccess\CseHelp.DataAccess.csproj" />
-    <ProjectReference Include="..\CseHelp.Models\CseHelp.Models.csproj" />
+    <ProjectReference Include="..\CseHelp.Services\CseHelp.Services.csproj" />
   </ItemGroup>
 
 </Project>

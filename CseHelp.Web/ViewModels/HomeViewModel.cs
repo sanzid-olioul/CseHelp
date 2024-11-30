@@ -1,11 +1,11 @@
-﻿using CseHelp.Common.DTOs;
-using CseHelp.Web.Utilities;
+﻿using CseHelp.Services.DTOs;
 
 namespace CseHelp.Web.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-        public List<QuoteDto> Quotes { get; set; } = new List<QuoteDto>();
+        public List<QuoteDTO> Quotes { get; set; } = new List<QuoteDTO>();
+
 
     }
 }

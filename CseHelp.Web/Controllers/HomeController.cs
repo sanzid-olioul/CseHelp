@@ -1,4 +1,4 @@
-using CseHelp.Web.Models;
+using CseHelp.Services.Interfaces;
 using CseHelp.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -8,15 +8,18 @@ namespace CseHelp.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IUnitOfWork _unitOfWork;
+        public HomeController(ILogger<HomeController> logger,IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             HomeViewModel model = new HomeViewModel();
+
+            model.Quotes = (List<Services.DTOs.QuoteDTO>) await _unitOfWork.Quote.GetAllQuote(1, 10);
             return View(model);
         }
 

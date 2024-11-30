@@ -1,4 +1,4 @@
-namespace CseHelp.Web.Models
+namespace CseHelp.Web.ViewModels
 {
     public class ErrorViewModel
     {
