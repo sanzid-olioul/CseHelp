@@ -6,10 +6,13 @@ namespace CseHelp.Services.Profiles
 {
     public class MappingProfiles:Profile
     {
-        public MappingProfiles() { 
-            CreateMap<Quote,QuoteDTO>().ReverseMap();
-            CreateMap<Article,ArticleDTO>().ReverseMap();
-            CreateMap<Author,AuthorDTO>().ReverseMap();
+        public MappingProfiles() {
+            CreateMap<Quote, QuoteDTO>();
+            CreateMap<QuoteDTO, Quote>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
+            CreateMap<Article,ArticleDTO>();
+            CreateMap<ArticleDTO, Article>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<Author,AuthorDTO>();
+            CreateMap<AuthorDTO, Author>().ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

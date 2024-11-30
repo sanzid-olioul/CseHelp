@@ -1,0 +1,70 @@
+﻿<MudDialog>
+    <TitleContent>
+        @ModalTitle
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@Model" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="@Model.Text" MaxLines="4" Lines="3" AutoGrow="true" Label="Quote" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Model.Text)"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="@Model.Author" Label="Author" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Model.Author)"></MudTextField>
+                </MudItem>
+            </MudGrid>
+            <MudItem>
+                <MudButton OnClick="Cancel">
+                    Cancel
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Submit">
+                    Submit
+                </MudButton>
+            </MudItem>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public IMudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public QuoteDTO Model { get; set; } = new QuoteDTO();
+    [Parameter]
+    public bool IsUpdate { get; set; } = false;
+
+    private string ModalTitle = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        @if (IsUpdate)
+        {
+            ModalTitle = "Update Quote";
+        }else{
+            ModalTitle = "Add Quote";
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async void Submit(EditContext context)
+    {
+        try{
+            if (IsUpdate)
+            {
+                _unitOfWork.Quote.UpdateQuote(Model);
+            }
+            else
+            {
+                await _unitOfWork.Quote.AddQuote(Model);
+            }
+            await _unitOfWork.SaveChanges();
+            MudDialog.Close();
+            _snackbar.Add("Successfully added or Updated",Severity.Success);
+
+        }
+        catch{
+            _snackbar.Add("Successfully added or Updated", Severity.Error);
+        }
+    }
+}

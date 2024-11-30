@@ -1,5 +1,6 @@
 ﻿using CseHelp.DataAccess;
 using CseHelp.Services.Interfaces;
+using CseHelp.Services.Profiles;
 using CseHelp.Services.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,7 @@ namespace CseHelp.Services
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConn"));
             });
 
-            services.AddAutoMapper(typeof(MappingType));
+            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             return services;

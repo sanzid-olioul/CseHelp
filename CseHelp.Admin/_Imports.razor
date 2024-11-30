@@ -8,5 +8,11 @@
 @using Microsoft.JSInterop
 @using CseHelp.Admin
 @using CseHelp.Admin.Shared
+@using CseHelp.Admin.Shared.Modals
 
+@using System.ComponentModel.DataAnnotations
 @using MudBlazor
+@using CseHelp.Services.DTOs 
+@inject CseHelp.Services.Interfaces.IUnitOfWork _unitOfWork
+@inject IDialogService _dialog
+@inject ISnackbar _snackbar

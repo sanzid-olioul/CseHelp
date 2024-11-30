@@ -1,0 +1,76 @@
+﻿@page "/quote"
+
+<MudPaper>
+    <MudTable ServerData="ServerReload" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteDTO,bool>(FilterFunc1)">
+        <ToolBarContent>        
+            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton Color="Color.Primary" OnClick="AddQuote">
+                Add
+            </MudButton>
+        </ToolBarContent>
+        <ColGroup>
+            <col style="width:5%;" />
+            <col style="width:60%;" />
+            <col style="width:20%;" />
+            <col style="width:15%;" />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>Nr</MudTh>
+            <MudTh>Quote</MudTh>
+            <MudTh>Author</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Id</MudTd>
+            <MudTd DataLabel="Sign">@context.Text</MudTd>
+            <MudTd DataLabel="Name">@context.Author</MudTd>
+            <MudTd DataLabel="Position">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    private bool dense = false;
+    private bool hover = true;
+    private bool striped = false;
+    private bool bordered = false;
+    private string searchString1 = "";
+
+    private HashSet<QuoteDTO> selectedItems = new HashSet<QuoteDTO>();
+
+    private IEnumerable<QuoteDTO> Elements = new List<QuoteDTO>();
+
+    private bool FilterFunc1(QuoteDTO element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(QuoteDTO element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Author.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Text.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task<TableData<QuoteDTO>> ServerReload(TableState state, CancellationToken token)
+    {
+        var data = await _unitOfWork.Quote.GetAllQuote(state.Page, state.PageSize);
+        await Task.Delay(300, token);
+        var totalItems = data.Count();
+        var pagedData = data;
+        return new TableData<QuoteDTO>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task AddQuote()
+    {
+        await _dialog.ShowAsync<AddEditQuoteModal>();
+    }
+}

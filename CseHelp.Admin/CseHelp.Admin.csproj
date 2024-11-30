@@ -14,4 +14,8 @@
     <ProjectReference Include="..\CseHelp.Services\CseHelp.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Shared\Components\" />
+  </ItemGroup>
+
 </Project>

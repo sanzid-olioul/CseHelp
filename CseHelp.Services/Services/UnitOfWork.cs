@@ -15,11 +15,6 @@ namespace CseHelp.Services.Services
             Quote = new QuoteRepository(dbContext,mapper);
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> SaveChanges()
         {
             return await _dbContext.SaveChangesAsync() > 0;
