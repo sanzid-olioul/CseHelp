@@ -20,14 +20,17 @@ namespace CseHelp.Services.Services
             await Create(quoteEntity);
         }
 
-        public async void DeleteQuote(int id)
+        public async Task DeleteQuote(int id)
         {
             var quote = await Get(q=>q.Id == id);
             if (quote != null)
             {
                 Delete(quote);
             }
-            throw new Exception("No Such Quote is found");
+            else
+            {
+                throw new Exception("No Such Quote is found");
+            }
         }
 
         public async Task<IEnumerable<QuoteDTO>> FilterQuoteByAuthor(string author)
@@ -50,13 +53,16 @@ namespace CseHelp.Services.Services
 
         public void UpdateQuote(QuoteDTO quote)
         {
-            if(quote.Id == 0)
+            if(quote.Id != 0)
             {
                 var quoteEntity = _mapper.Map<Quote>(quote);
                 Update(quoteEntity);
             }
-
-            throw new Exception("Invalid Quote found");
+            else
+            {
+                throw new Exception("Invalid Quote found");
+            }
+            
         }
     }
 }

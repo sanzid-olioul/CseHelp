@@ -26,7 +26,7 @@ namespace CseHelp.Services.Services
 
         public async Task<IEnumerable<T>> GetAll(int pageNo=1, int pageSize=10)
         {
-            var res = await _dbContext.Set<T>().Skip(pageNo* pageSize).Take(pageSize).ToListAsync();
+            var res = await _dbContext.Set<T>().Skip(pageNo* pageSize).Take(pageSize).AsNoTracking().ToListAsync();
             if (res.Count > 0)
             {
                 return res;

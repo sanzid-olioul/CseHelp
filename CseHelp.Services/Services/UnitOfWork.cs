@@ -12,7 +12,7 @@ namespace CseHelp.Services.Services
         public UnitOfWork(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
-            Quote = new QuoteRepository(dbContext,mapper);
+            Quote = new QuoteRepository(_dbContext, mapper);
         }
 
         public async Task<bool> SaveChanges()

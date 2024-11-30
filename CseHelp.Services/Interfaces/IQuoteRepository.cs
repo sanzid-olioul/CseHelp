@@ -9,6 +9,6 @@ namespace CseHelp.Services.Interfaces
         Task<IEnumerable<QuoteDTO>> FilterQuoteByAuthor(string author);
         Task AddQuote(QuoteDTO quote);
         void UpdateQuote(QuoteDTO quote);
-        void DeleteQuote(int id);
+        Task DeleteQuote(int id);
     }
 }

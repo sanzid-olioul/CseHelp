@@ -13,11 +13,11 @@
                     <MudTextField @bind-Value="@Model.Author" Label="Author" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Model.Author)"></MudTextField>
                 </MudItem>
             </MudGrid>
-            <MudItem>
-                <MudButton OnClick="Cancel">
+            <MudItem Class="d-flex flex-row justify-conent-end">
+                <MudButton OnClick="Cancel" Color="Color.Warning" Variant="Variant.Filled">
                     Cancel
                 </MudButton>
-                <MudButton ButtonType="ButtonType.Submit">
+                <MudButton ButtonType="ButtonType.Submit" Color="Color.Success" Variant="Variant.Filled">
                     Submit
                 </MudButton>
             </MudItem>

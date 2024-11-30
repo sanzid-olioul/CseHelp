@@ -11,9 +11,9 @@
         </ToolBarContent>
         <ColGroup>
             <col style="width:5%;" />
-            <col style="width:60%;" />
-            <col style="width:20%;" />
+            <col style="width:70%;" />
             <col style="width:15%;" />
+            <col style="width:10%;" />
         </ColGroup>
         <HeaderContent>
             <MudTh>Nr</MudTh>
@@ -26,8 +26,8 @@
             <MudTd DataLabel="Sign">@context.Text</MudTd>
             <MudTd DataLabel="Name">@context.Author</MudTd>
             <MudTd DataLabel="Position">
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit"/>
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditQuote(context))"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="@(()=>DeleteQuote(context))" />
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -45,7 +45,7 @@
 
     private HashSet<QuoteDTO> selectedItems = new HashSet<QuoteDTO>();
 
-    private IEnumerable<QuoteDTO> Elements = new List<QuoteDTO>();
+    private List<QuoteDTO> Elements = new List<QuoteDTO>();
 
     private bool FilterFunc1(QuoteDTO element) => FilterFunc(element, searchString1);
 
@@ -71,6 +71,39 @@
 
     private async Task AddQuote()
     {
-        await _dialog.ShowAsync<AddEditQuoteModal>();
+        await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote",new DialogOptions{
+            CloseButton= true,
+            BackdropClick = true,
+            FullWidth = true,
+        });
+    }
+
+    private async Task EditQuote(QuoteDTO quote)
+    {
+        await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
+        new DialogParameters {
+            ["Model"] = quote,
+            ["IsUpdate"] = true
+        },
+        new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+    }
+
+    private async Task DeleteQuote(QuoteDTO quote){
+        try{
+            await _unitOfWork.Quote.DeleteQuote(quote.Id);
+            var response = await _unitOfWork.SaveChanges();
+            Elements.Remove(quote);
+            _snackbar.Add("Deleted Successfully", Severity.Success);
+            StateHasChanged();
+        }
+        catch{
+            _snackbar.Add("Failed to delete try again", Severity.Error);
+        }
+        
     }
 }

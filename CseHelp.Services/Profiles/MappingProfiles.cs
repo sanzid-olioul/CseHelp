@@ -8,7 +8,7 @@ namespace CseHelp.Services.Profiles
     {
         public MappingProfiles() {
             CreateMap<Quote, QuoteDTO>();
-            CreateMap<QuoteDTO, Quote>().ForMember(dest => dest.Id, opt => opt.Ignore()); ;
+            CreateMap<QuoteDTO, Quote>();
             CreateMap<Article,ArticleDTO>();
             CreateMap<ArticleDTO, Article>().ForMember(dest => dest.Id, opt => opt.Ignore());
             CreateMap<Author,AuthorDTO>();
