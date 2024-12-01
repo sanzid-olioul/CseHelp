@@ -53,7 +53,7 @@ namespace CseHelp.Services.Repository
                ).ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(Guid id)
         {
             return await _db.FindAsync(id);
         }
@@ -86,7 +86,7 @@ namespace CseHelp.Services.Repository
             return entityList;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(Guid id)
         {
             var entity = await _db.FindAsync(id);
             if (entity != null)

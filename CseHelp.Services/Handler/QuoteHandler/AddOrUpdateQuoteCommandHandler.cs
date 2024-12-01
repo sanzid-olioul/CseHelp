@@ -16,6 +16,7 @@ namespace CseHelp.Services.Handler.QuoteHandler
             _quoteRepository = quoteRepository;
             _mapper = mapper;
         }
+
         public async Task<ResponseModel> Handle(AddOrUpdateQuoteCommand request, CancellationToken cancellationToken)
         {
             try{

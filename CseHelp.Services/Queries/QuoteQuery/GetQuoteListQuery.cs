@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CseHelp.Services.Models;
+using MediatR;
 
 namespace CseHelp.Services.Queries.QuoteQuery
 {
-    internal class GetQuoteListQuery
+    public class GetQuoteListQuery: IRequest<List<QuoteModel>>
     {
     }
 }

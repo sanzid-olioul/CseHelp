@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CseHelp.Services.Models;
+using MediatR;
 
 namespace CseHelp.Services.Command.QuoteCommand
 {
-    internal class DeleteQuoteCommand
+    public class DeleteQuoteCommand : QuoteModel , IRequest<ResponseModel>
     {
     }
 }

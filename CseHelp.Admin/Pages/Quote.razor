@@ -1,33 +1,37 @@
 ﻿@page "/quote"
+@using CseHelp.Services.Queries.QuoteQuery
+@using CseHelp.Services.Command.QuoteCommand
 
-<MudPaper>
-    <MudTable ServerData="ServerReload" @ref="table" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteModel,bool>(FilterFunc)">
+<MudPaper Class="ma-2">
+    <MudPaper Elevation="0">
+        <MudText Class="ma-2" Typo="Typo.h3">
+            All Quotes
+        </MudText>
+    </MudPaper>
+    <MudTable Items="@QuoteList" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteModel,bool>(FilterFunc)">
         <ToolBarContent>        
             <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
-            <MudButton Color="Color.Primary" OnClick="AddQuote">
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddQuote">
                 Add
             </MudButton>
         </ToolBarContent>
         <ColGroup>
-            <col style="width:5%;" />
             <col style="width:70%;" />
             <col style="width:15%;" />
-            <col style="width:10%;" />
+            <col style="width:15%;" />
         </ColGroup>
         <HeaderContent>
-            <MudTh>Nr</MudTh>
             <MudTh>Quote</MudTh>
             <MudTh>Author</MudTh>
             <MudTh>Action</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Nr">@context.Id</MudTd>
             <MudTd DataLabel="Sign">@context.Text</MudTd>
             <MudTd DataLabel="Name">@context.Author</MudTd>
-            <MudTd DataLabel="Position">
-                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditQuote(context))"/>
-                <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="@(()=>DeleteQuote(context))" />
+            <MudTd DataLabel="Action" Class="d-flex flex-row justify-center">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Info" OnClick="@(()=>EditQuote(context))"/>
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(()=>DeleteQuote(context))" />
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -37,8 +41,13 @@
 </MudPaper>
 
 @code {
-    private string searchString = "";
-    private MudTable<QuoteModel> table;
+    private string searchString = string.Empty;
+    private List<QuoteModel> QuoteList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        QuoteList = await _mediator.Send(new GetQuoteListQuery());
+    }
 
     private bool FilterFunc(QuoteModel element)
     {
@@ -51,29 +60,27 @@
         return false;
     }
 
-    private async Task<TableData<QuoteModel>> ServerReload(TableState state, CancellationToken token)
-    {
-        // var data = await _unitOfWork.Quote.GetAllQuote(state.Page, state.PageSize);
-        await Task.Delay(300, token);
-        var totalItems = 0;
-        var pagedData = new List<QuoteModel>();
-        return new TableData<QuoteModel>() { TotalItems = totalItems, Items = pagedData };
-    }
-
     private async Task AddQuote()
     {
-        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote", new DialogOptions
+        var dialog = await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote", new DialogOptions
             {
-            CloseButton= true,
-            BackdropClick = true,
-            FullWidth = true,
-        });
-   
+                CloseButton= true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+
+        var result = await dialog.Result;
+
+        if(!result.Canceled)
+        {
+            var quote = result.Data as QuoteModel;
+            QuoteList.Add(quote);
+        }
     }
 
     private async Task EditQuote(QuoteModel quote)
     {
-        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
+        var dialog = await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
         new DialogParameters 
         {
             ["Model"] = quote,
@@ -85,19 +92,32 @@
             BackdropClick = true,
             FullWidth = true,
         }); 
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var updatedQuote = result.Data as QuoteModel;
+            int index = QuoteList.IndexOf(quote);
+            QuoteList[index] = updatedQuote;
+        }
     }
 
     private async Task DeleteQuote(QuoteModel quote)
     {
         try{
-            // await _unitOfWork.Quote.DeleteQuote(quote.Id);
-            // var response = await _unitOfWork.SaveChanges();
-            _snackbar.Add("Deleted Successfully", Severity.Success);        
-            await table.ReloadServerData();
+            var response = await _mediator.Send(new DeleteQuoteCommand { Id = quote.Id, Author = quote.Author, Text = quote.Text });
+
+            if(response.IsSuccess == true){
+                _snackbar.Add(response.Message, Severity.Success);
+                QuoteList.Remove(quote);
+            }
+            else{
+                _snackbar.Add(response.Message, Severity.Error);
+            }
         }
         catch{
             _snackbar.Add("Failed to delete try again", Severity.Error);
         }
-        
     }
 }

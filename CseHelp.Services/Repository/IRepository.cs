@@ -15,12 +15,12 @@ namespace CseHelp.Services.Repository
         Task<List<T>> GetsAsync(Expression<Func<T, bool>> predicate,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy,
             params Expression<Func<T, object>>[] includes);
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(Guid id);
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
         Task Insert(T entity);
         Task Update(T entity);
         Task<List<T>> UpdateListAsync(List<T> entityList);
-        Task<bool> Delete(int id);
+        Task<bool> Delete(Guid id);
         Task SaveChangesAsync();
     }
 }

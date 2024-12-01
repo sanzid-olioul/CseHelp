@@ -1,5 +1,4 @@
 using CseHelp.Services;
-using MediatR;
 using MudBlazor.Services;
 
 internal class Program
@@ -12,7 +11,6 @@ internal class Program
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
         builder.Services.RegisterServices(builder.Configuration);
-        builder.Services.AddMediatR(typeof(Program).Assembly);
         builder.Services.AddMudServices();
         var app = builder.Build();
 

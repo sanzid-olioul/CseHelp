@@ -1,7 +1,107 @@
 ﻿@page "/author"
 
-<h3>Author</h3>
+@using CseHelp.Services.Queries.QuoteQuery
+
+<MudPaper Class="ma-2">
+    <MudPaper Elevation="0">
+        <MudText Class="ma-2" Typo="Typo.h3">
+            All Quotes
+        </MudText>
+    </MudPaper>
+    <MudTable ServerData="ServerReload" @ref="table" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteModel,bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddQuote">
+                Add
+            </MudButton>
+        </ToolBarContent>
+        <ColGroup>
+            <col style="width:70%;" />
+            <col style="width:15%;" />
+            <col style="width:15%;" />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>Quote</MudTh>
+            <MudTh>Author</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Sign">@context.Text</MudTd>
+            <MudTd DataLabel="Name">@context.Author</MudTd>
+            <MudTd DataLabel="Action">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Info" OnClick="@(()=>EditQuote(context))" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(()=>DeleteQuote(context))" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
 
 @code {
+    private string searchString = "";
+    private MudTable<QuoteModel> table;
 
+    private bool FilterFunc(QuoteModel element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Author.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Text.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task<TableData<QuoteModel>> ServerReload(TableState state, CancellationToken token)
+    {
+        var data = await _mediator.Send(new GetQuoteListQuery());
+        var totalItems = data.Count;
+        var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize);
+        return new TableData<QuoteModel>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task AddQuote()
+    {
+        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote", new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+
+    }
+
+    private async Task EditQuote(QuoteModel quote)
+    {
+        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
+        new DialogParameters
+            {
+                ["Model"] = quote,
+                ["IsUpdate"] = true
+            },
+        new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+    }
+
+    private async Task DeleteQuote(QuoteModel quote)
+    {
+        try
+        {
+            // await _unitOfWork.Quote.DeleteQuote(quote.Id);
+            // var response = await _unitOfWork.SaveChanges();
+            _snackbar.Add("Deleted Successfully", Severity.Success);
+            await table.ReloadServerData();
+        }
+        catch
+        {
+            _snackbar.Add("Failed to delete try again", Severity.Error);
+        }
+    }
 }
