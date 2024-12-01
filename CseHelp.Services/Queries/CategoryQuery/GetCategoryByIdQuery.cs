@@ -3,7 +3,8 @@ using MediatR;
 
 namespace CseHelp.Services.Queries.CategoryQuery
 {
-    public class GetCategoryListQuery:IRequest<List<CategoryModel>>
+    public class GetCategoryByIdQuery:IRequest<CategoryModel>
     {
+        public Guid Id { get; set; } = Guid.Empty;
     }
 }

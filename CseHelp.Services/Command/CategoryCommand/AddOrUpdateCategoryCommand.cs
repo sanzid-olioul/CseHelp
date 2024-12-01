@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using CseHelp.Models.Entities;
+using CseHelp.Services.Models;
+using CseHelp.Services.Repository;
+using MediatR;
 
 namespace CseHelp.Services.Command.CategoryCommand
 {
-    internal class AddOrUpdateCategoryCommand
+    public class AddOrUpdateCategoryCommand: CategoryModel, IRequest<ResponseModel>
     {
     }
 }

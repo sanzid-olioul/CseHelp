@@ -1,0 +1,135 @@
+﻿@page "/category"
+@using CseHelp.Services.Queries.CategoryQuery
+@using CseHelp.Services.Command.CategoryCommand
+
+<MudPaper Class="ma-2">
+    <MudPaper Elevation="0">
+        <MudText Class="ma-2" Typo="Typo.h3">
+            All Categorys
+        </MudText>
+    </MudPaper>
+    <MudTable Items="@CategoryList" Dense="true" Hover="true" Bordered="true" Filter="new Func<CategoryModel,bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddCategory">
+                Add
+            </MudButton>
+        </ToolBarContent>
+        <ColGroup>
+            <col style="width:20%;" />
+            <col style="width:45%;" />
+            <col style="width:20%;" />
+            <col style="width:15%;" />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Image</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Image">@context.ImagePatha</MudTd>
+            <MudTd DataLabel="Action" Class="d-flex flex-row justify-center">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" Color="Color.Info" OnClick="@(()=>EditCategory(context))" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" Color="Color.Error" OnClick="@(()=>DeleteCategory(context))" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    private string searchString = string.Empty;
+    private List<CategoryModel> CategoryList = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CategoryList = await _mediator.Send(new GetCategoryListQuery());
+    }
+
+    private bool FilterFunc(CategoryModel element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task AddCategory()
+    {
+        var dialog = await _dialog.ShowAsync<AddEditCategoryModal>("Add New Category", new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var category = result.Data as CategoryModel;
+            CategoryList.Add(category);
+        }
+    }
+
+    private async Task EditCategory(CategoryModel category)
+    {
+        var dialog = await _dialog.ShowAsync<AddEditCategoryModal>("Edit Category",
+        new DialogParameters
+            {
+                ["Model"] = category,
+                ["IsUpdate"] = true
+            },
+        new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var updatedCategory = result.Data as CategoryModel;
+            int index = CategoryList.IndexOf(category);
+            CategoryList[index] = updatedCategory;
+        }
+    }
+
+    private async Task DeleteCategory(CategoryModel category)
+    {
+        try
+        {
+            var response = await _mediator.Send(new DeleteCategoryCommand {
+                Id = category.Id, 
+                Name = category.Name,
+                Description = category.Description,
+                ImagePatha = category.ImagePatha 
+            });
+
+            if (response.IsSuccess == true)
+            {
+                _snackbar.Add(response.Message, Severity.Success);
+                CategoryList.Remove(category);
+            }
+            else
+            {
+                _snackbar.Add(response.Message, Severity.Error);
+            }
+        }
+        catch
+        {
+            _snackbar.Add("Failed to delete try again", Severity.Error);
+        }
+    }
+}

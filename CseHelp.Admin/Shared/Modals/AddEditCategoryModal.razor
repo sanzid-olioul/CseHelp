@@ -1,0 +1,75 @@
+﻿@using CseHelp.Services.Command.CategoryCommand
+
+<MudDialog>
+    <TitleContent>
+        @ModalTitle
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="@Model" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="@Model.Name" Label="Category Name" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Model.Name)"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="@Model.Description" MaxLines="4" Lines="2" AutoGrow="true" Label="Description" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Model.Description)"></MudTextField>
+                </MudItem>
+                <MudItem xs="12">
+                    
+                </MudItem>
+            </MudGrid>
+            <MudItem Class="d-flex flex-row ma-2" Style="float:right;">
+                <MudButton OnClick="Cancel" Color="Color.Warning" Variant="Variant.Filled" Class="mr-2">
+                    Cancel
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Color="Color.Success" Variant="Variant.Filled">
+                    Submit
+                </MudButton>
+            </MudItem>
+        </EditForm>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public IMudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public CategoryModel Model { get; set; } = new CategoryModel();
+    [Parameter]
+    public bool IsUpdate { get; set; } = false;
+
+    private string ModalTitle = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        @if (IsUpdate)
+        {
+            ModalTitle = "Update Category";
+        }
+        else
+        {
+            ModalTitle = "Add Category";
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private async void Submit(EditContext context)
+    {
+        try
+        {
+            var response = await _mediator.Send(new AddOrUpdateCategoryCommand { Name = Model.Name, Description = Model.Description, Id = Model.Id,ImagePatha="Sanzid" });
+            if (!IsUpdate)
+            {
+                Model.Id = response.Id;
+            }
+
+            MudDialog.Close<CategoryModel>(Model);
+            _snackbar.Add(response?.Message, Severity.Success);
+        }
+        catch
+        {
+            _snackbar.Add("Failed to add or update", Severity.Error);
+        }
+    }
+}
