@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CseHelp.Models.Entities
 {
     public class Quote
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
+        [Required]
+        [MaxLength(1000,ErrorMessage = "Article Length Can't be more than 1000 character")]
         public string Text { get; set; }
+        [Required]
+        [MaxLength(50, ErrorMessage = "Article Length Can't be more than 1000 character")]
         public string Author { get; set; }
     }
 }

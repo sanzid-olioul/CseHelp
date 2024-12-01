@@ -1,25 +1,24 @@
-using CseHelp.Services.Interfaces;
+using CseHelp.Services.Models;
+using CseHelp.Services.Queries.QuoteQuery;
 using CseHelp.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace CseHelp.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUnitOfWork _unitOfWork;
-        public HomeController(ILogger<HomeController> logger,IUnitOfWork unitOfWork)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index()
         {
             HomeViewModel model = new HomeViewModel();
-
-            model.Quotes = (List<Services.DTOs.QuoteDTO>) await _unitOfWork.Quote.GetAllQuote(1, 10);
+             
+            model.Quote = await _mediatr.Send(new GetRandomQuoteQuery());
             return View(model);
         }
 

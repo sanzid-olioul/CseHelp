@@ -29,7 +29,7 @@
     [CascadingParameter]
     public IMudDialogInstance MudDialog { get; set; }
     [Parameter]
-    public QuoteDTO Model { get; set; } = new QuoteDTO();
+    public QuoteModel Model { get; set; } = new QuoteModel();
     [Parameter]
     public bool IsUpdate { get; set; } = false;
 
@@ -50,16 +50,16 @@
     private async void Submit(EditContext context)
     {
         try{
-            if (IsUpdate)
-            {
-                _unitOfWork.Quote.UpdateQuote(Model);
-            }
-            else
-            {
-                await _unitOfWork.Quote.AddQuote(Model);
-            }
-            await _unitOfWork.SaveChanges();
-            MudDialog.Close();
+            // if (IsUpdate)
+            // {
+            //     _unitOfWork.Quote.UpdateQuote(Model);
+            // }
+            // else
+            // {
+            //     await _unitOfWork.Quote.AddQuote(Model);
+            // }
+            // await _unitOfWork.SaveChanges();
+            // MudDialog.Close<QuoteDTO>(Model);
             _snackbar.Add("Successfully added or Updated",Severity.Success);
 
         }

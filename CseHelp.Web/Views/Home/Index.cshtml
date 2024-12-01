@@ -9,9 +9,10 @@
 
     <div class="site-background" data-aos="fade-up" data-aos-delay="100">
         <h1>
-            "Programming isn't about what you know; it's about what you can figure out.”</h3>
-            <h3>- Chris Pine</h3>
-            <button class="btn">Explore</button>
+            @Model?.Quote?.Text
+        </h1>
+        <h3>- @Model?.Quote?.Author </h3>
+        <button class="btn">Explore</button>
     </div>
 </section>
 

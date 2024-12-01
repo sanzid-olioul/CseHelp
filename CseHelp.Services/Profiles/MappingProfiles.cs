@@ -1,18 +1,16 @@
 ﻿using AutoMapper;
 using CseHelp.Models.Entities;
-using CseHelp.Services.DTOs;
+using CseHelp.Services.Models;
 
 namespace CseHelp.Services.Profiles
 {
     public class MappingProfiles:Profile
     {
         public MappingProfiles() {
-            CreateMap<Quote, QuoteDTO>();
-            CreateMap<QuoteDTO, Quote>();
-            CreateMap<Article,ArticleDTO>();
-            CreateMap<ArticleDTO, Article>().ForMember(dest => dest.Id, opt => opt.Ignore());
-            CreateMap<Author,AuthorDTO>();
-            CreateMap<AuthorDTO, Author>().ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<Quote, QuoteModel>().ReverseMap();
+            CreateMap<Article,AuthorModle>().ReverseMap();
+            CreateMap<Category,CategoryModel>().ReverseMap();
+            CreateMap<SubCategory,SubCategoryModel>().ReverseMap();
         }
     }
 }

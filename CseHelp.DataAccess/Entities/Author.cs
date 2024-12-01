@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CseHelp.Models.Entities
 {
     public class Author
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
         public string University { get; set; }
         public string Department { get; set; }
         public string Motive { get; set; }

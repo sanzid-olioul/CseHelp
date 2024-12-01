@@ -1,11 +1,11 @@
 ﻿using CseHelp.DataAccess;
-using CseHelp.Services.Interfaces;
+using CseHelp.Services.Command.QuoteCommand;
 using CseHelp.Services.Profiles;
-using CseHelp.Services.Services;
+using CseHelp.Services.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data;
+using System.Reflection;
 
 namespace CseHelp.Services
 {
@@ -19,8 +19,8 @@ namespace CseHelp.Services
             });
 
             services.AddAutoMapper(typeof(MappingProfiles));
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
-
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(AddOrUpdateQuoteCommand).GetTypeInfo().Assembly));
             return services;
         }
     }

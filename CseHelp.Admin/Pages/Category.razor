@@ -1,8 +1,107 @@
 ﻿@page "/category"
 
 
-<h3>Category</h3>
+
+<MudPaper>
+    <MudTable ServerData="ServerReload" @ref="table" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteModel,bool>(FilterFunc)">
+        <ToolBarContent>
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudSpacer />
+            <MudButton Color="Color.Primary" OnClick="AddQuote">
+                Add
+            </MudButton>
+        </ToolBarContent>
+        <ColGroup>
+            <col style="width:5%;" />
+            <col style="width:70%;" />
+            <col style="width:15%;" />
+            <col style="width:10%;" />
+        </ColGroup>
+        <HeaderContent>
+            <MudTh>Nr</MudTh>
+            <MudTh>Quote</MudTh>
+            <MudTh>Author</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Id</MudTd>
+            <MudTd DataLabel="Sign">@context.Text</MudTd>
+            <MudTd DataLabel="Name">@context.Author</MudTd>
+            <MudTd DataLabel="Position">
+                <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="@(()=>EditQuote(context))" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="@(()=>DeleteQuote(context))" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
 
 @code {
+    private string searchString = "";
+    private MudTable<QuoteModel> table;
 
+    private bool FilterFunc(QuoteModel element)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Author.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Text.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return false;
+    }
+
+    private async Task<TableData<QuoteModel>> ServerReload(TableState state, CancellationToken token)
+    {
+        // var data = await _unitOfWork.Quote.GetAllQuote(state.Page, state.PageSize);
+        await Task.Delay(300, token);
+        var totalItems = 0;
+        var pagedData = new List<QuoteModel>();
+        return new TableData<QuoteModel>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private async Task AddQuote()
+    {
+        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote", new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+
+    }
+
+    private async Task EditQuote(QuoteModel quote)
+    {
+        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
+        new DialogParameters
+            {
+                ["Model"] = quote,
+                ["IsUpdate"] = true
+            },
+        new DialogOptions
+            {
+                CloseButton = true,
+                BackdropClick = true,
+                FullWidth = true,
+            });
+    }
+
+    private async Task DeleteQuote(QuoteModel quote)
+    {
+        try
+        {
+            // await _unitOfWork.Quote.DeleteQuote(quote.Id);
+            // var response = await _unitOfWork.SaveChanges();
+            _snackbar.Add("Deleted Successfully", Severity.Success);
+            await table.ReloadServerData();
+        }
+        catch
+        {
+            _snackbar.Add("Failed to delete try again", Severity.Error);
+        }
+
+    }
 }

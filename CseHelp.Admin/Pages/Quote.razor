@@ -1,9 +1,9 @@
 ﻿@page "/quote"
 
 <MudPaper>
-    <MudTable ServerData="ServerReload" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteDTO,bool>(FilterFunc1)">
+    <MudTable ServerData="ServerReload" @ref="table" Dense="true" Hover="true" Bordered="true" Filter="new Func<QuoteModel,bool>(FilterFunc)">
         <ToolBarContent>        
-            <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             <MudSpacer />
             <MudButton Color="Color.Primary" OnClick="AddQuote">
                 Add
@@ -37,19 +37,10 @@
 </MudPaper>
 
 @code {
-    private bool dense = false;
-    private bool hover = true;
-    private bool striped = false;
-    private bool bordered = false;
-    private string searchString1 = "";
+    private string searchString = "";
+    private MudTable<QuoteModel> table;
 
-    private HashSet<QuoteDTO> selectedItems = new HashSet<QuoteDTO>();
-
-    private List<QuoteDTO> Elements = new List<QuoteDTO>();
-
-    private bool FilterFunc1(QuoteDTO element) => FilterFunc(element, searchString1);
-
-    private bool FilterFunc(QuoteDTO element, string searchString)
+    private bool FilterFunc(QuoteModel element)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -60,46 +51,49 @@
         return false;
     }
 
-    private async Task<TableData<QuoteDTO>> ServerReload(TableState state, CancellationToken token)
+    private async Task<TableData<QuoteModel>> ServerReload(TableState state, CancellationToken token)
     {
-        var data = await _unitOfWork.Quote.GetAllQuote(state.Page, state.PageSize);
+        // var data = await _unitOfWork.Quote.GetAllQuote(state.Page, state.PageSize);
         await Task.Delay(300, token);
-        var totalItems = data.Count();
-        var pagedData = data;
-        return new TableData<QuoteDTO>() { TotalItems = totalItems, Items = pagedData };
+        var totalItems = 0;
+        var pagedData = new List<QuoteModel>();
+        return new TableData<QuoteModel>() { TotalItems = totalItems, Items = pagedData };
     }
 
     private async Task AddQuote()
     {
-        await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote",new DialogOptions{
+        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Add New Quote", new DialogOptions
+            {
             CloseButton= true,
             BackdropClick = true,
             FullWidth = true,
         });
+   
     }
 
-    private async Task EditQuote(QuoteDTO quote)
+    private async Task EditQuote(QuoteModel quote)
     {
-        await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
-        new DialogParameters {
+        var res = await _dialog.ShowAsync<AddEditQuoteModal>("Edit Quote",
+        new DialogParameters 
+        {
             ["Model"] = quote,
             ["IsUpdate"] = true
         },
         new DialogOptions
-            {
-                CloseButton = true,
-                BackdropClick = true,
-                FullWidth = true,
-            });
+        {
+            CloseButton = true,
+            BackdropClick = true,
+            FullWidth = true,
+        }); 
     }
 
-    private async Task DeleteQuote(QuoteDTO quote){
+    private async Task DeleteQuote(QuoteModel quote)
+    {
         try{
-            await _unitOfWork.Quote.DeleteQuote(quote.Id);
-            var response = await _unitOfWork.SaveChanges();
-            Elements.Remove(quote);
-            _snackbar.Add("Deleted Successfully", Severity.Success);
-            StateHasChanged();
+            // await _unitOfWork.Quote.DeleteQuote(quote.Id);
+            // var response = await _unitOfWork.SaveChanges();
+            _snackbar.Add("Deleted Successfully", Severity.Success);        
+            await table.ReloadServerData();
         }
         catch{
             _snackbar.Add("Failed to delete try again", Severity.Error);

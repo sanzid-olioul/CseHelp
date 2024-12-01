@@ -24,14 +24,15 @@ namespace CseHelp.DataAccess.Migrations
 
             modelBuilder.Entity("CseHelp.Models.Entities.Article", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("AuthorId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -43,6 +44,9 @@ namespace CseHelp.DataAccess.Migrations
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("SubCategoryId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -52,20 +56,18 @@ namespace CseHelp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId1");
 
-                    b.HasIndex("SubCategoryId");
+                    b.HasIndex("SubCategoryId1");
 
                     b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("CseHelp.Models.Entities.Author", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Department")
                         .IsRequired()
@@ -82,22 +84,25 @@ namespace CseHelp.DataAccess.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("WrittingMotivation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId1");
+
                     b.ToTable("Author");
                 });
 
             modelBuilder.Entity("CseHelp.Models.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -118,19 +123,19 @@ namespace CseHelp.DataAccess.Migrations
 
             modelBuilder.Entity("CseHelp.Models.Entities.Quote", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Author")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("Id");
 
@@ -139,14 +144,15 @@ namespace CseHelp.DataAccess.Migrations
 
             modelBuilder.Entity("CseHelp.Models.Entities.SubCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("CategoryId1")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -162,20 +168,18 @@ namespace CseHelp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryId1");
 
                     b.ToTable("SubCategories");
                 });
 
             modelBuilder.Entity("CseHelp.Models.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AuthorId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -223,9 +227,6 @@ namespace CseHelp.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId")
-                        .IsUnique();
-
                     b.ToTable("Users");
                 });
 
@@ -233,46 +234,35 @@ namespace CseHelp.DataAccess.Migrations
                 {
                     b.HasOne("CseHelp.Models.Entities.Author", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId1");
 
                     b.HasOne("CseHelp.Models.Entities.SubCategory", "SubCategory")
                         .WithMany("Articles")
-                        .HasForeignKey("SubCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubCategoryId1");
 
                     b.Navigation("Author");
 
                     b.Navigation("SubCategory");
                 });
 
+            modelBuilder.Entity("CseHelp.Models.Entities.Author", b =>
+                {
+                    b.HasOne("CseHelp.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("CseHelp.Models.Entities.SubCategory", b =>
                 {
                     b.HasOne("CseHelp.Models.Entities.Category", "Category")
                         .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoryId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("CseHelp.Models.Entities.User", b =>
-                {
-                    b.HasOne("CseHelp.Models.Entities.Author", "Author")
-                        .WithOne("User")
-                        .HasForeignKey("CseHelp.Models.Entities.User", "AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("CseHelp.Models.Entities.Author", b =>
-                {
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CseHelp.Models.Entities.Category", b =>
