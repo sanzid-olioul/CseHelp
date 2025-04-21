@@ -1,19 +1,20 @@
-using CSEhelp.Data;
 using CSEhelp.Utilities;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.GetSection("SocialLinks").Bind(AppSocialLinks.Values);
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConn"));
-});
+builder.Configuration.GetSection("Settings").Bind(AppSettings.Settings);
 
-
+builder.Services.RegisterServices();
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var adminSeeder = scope.ServiceProvider.GetRequiredService<ServiceRegistry.IAdminSeeder>();
+    await adminSeeder.SeedAdminUserAsync();
+}
 
 if (!app.Environment.IsDevelopment())
 {

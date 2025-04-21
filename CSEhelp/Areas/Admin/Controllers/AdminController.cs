@@ -2,8 +2,10 @@
 
 namespace CSEhelp.Areas.Admin.Controllers
 {
-    public class ArticleController : Controller
+    [Area("Admin")]
+    public class AdminController : Controller
     {
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
